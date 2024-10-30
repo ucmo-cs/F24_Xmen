@@ -1,0 +1,16 @@
+#login-div{
+    text-align: center;
+}
+#floating-box{
+    width: 60%;
+    margin: auto;
+}
+#text-align-left{
+    margin-left: 20%;
+    padding-top: 1rem;
+}
+#login-button{
+    width: 60%;
+    margin-top: 1rem;
+    margin-left: 20%;
+}

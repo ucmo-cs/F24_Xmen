@@ -1,0 +1,21 @@
+#bg-color-header {
+    background-color: grey;
+    padding-right: 80px;
+    padding-left: 80px;
+}
+
+#text-color{
+    color: white;
+    align-self: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-size: 20px;
+}
+
+#basic-nav-dropdown{
+    color: white;
+}
+
+#profile-image{
+    padding-right: 50px;
+}
