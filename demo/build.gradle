@@ -33,7 +33,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.1.1'
-
+	implementation 'mysql:mysql-connector-java:8.0.33'
 }
 
 tasks.named('test') {
