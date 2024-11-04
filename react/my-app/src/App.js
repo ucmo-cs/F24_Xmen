@@ -7,6 +7,7 @@ import Customer from './pages/Customer';
 import SaveLoan from './pages/SaveLoan';
 import Loan_bk from './pages/Loan_bk';
 import Login from './pages/Login';
+import Admin from './pages/Admin';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/customer" exact={true} element={<Customer/>}/>
           <Route path="/login" exact={true} element={<Login/>}/>
             <Route path="/" exact={true} element={<Login/>}/>
+            <Route path="/admin" exact={true} element={<Admin/>}/>
         </Routes>
       </div>
   );
