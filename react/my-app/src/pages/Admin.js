@@ -9,7 +9,7 @@ function Admin(){
 
     return(
         <div>
-        <Button variant="primary" type="submit" id="create-loan-button" href="/loanform">
+        <Button variant="primary" id="create-loan-button" href="/loanform">
         Create A Loan  
       </Button>
         <Table striped bordered hover id="loan-table">

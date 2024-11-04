@@ -71,6 +71,15 @@ function SaveLoan(props) {
         <Form.Label>Interest Rate</Form.Label>
         <Form.Control name="interest_rate" onChange = {changeValue} placeholder="Enter Interest Rate Here" />
       </Form.Group>
+      <Form.Group className="mb-3" controlId="formGroupPassword" id="floating-box">
+        <Form.Label>Email</Form.Label>
+        <Form.Control placeholder="Enter Email Here" />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="formGroupPassword" id="floating-box">
+        <Form.Label>Phone #</Form.Label>
+        <Form.Control  placeholder="Enter Phone # Here" />
+      </Form.Group>
+      
 
       <Button variant="primary" type="submit" id="saveloan-button">
         Submit  
