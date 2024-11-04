@@ -1,0 +1,17 @@
+#welcome-customer{
+    margin-top: 1rem;
+    justify-self: center;
+    color: grey;
+}
+
+#edit-message{
+    color: grey;
+    justify-self:center;
+    margin-top: 2rem;
+}
+
+#save-edits-button{
+    width: 60%;
+    margin-left: 20%;
+    margin-bottom: 1rem;
+}
