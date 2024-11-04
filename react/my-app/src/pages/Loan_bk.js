@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import "./Loan.css";
  
 
 
@@ -28,13 +29,13 @@ function Loan_bk() {
   return (
     <div>
 
-        <Table striped bordered hover>
+        <Table striped bordered hover id="loan-table">
       <thead>
         <tr>
           <th>#</th>
           <th>Date Created</th>
-          <th>Amount Owed</th>
-          <th>Original Loan Amount</th>
+          <th>Remaining Balance</th>
+          <th>Principle</th>
           <th>Interest Rate</th>
         </tr>
       </thead>
@@ -50,7 +51,6 @@ function Loan_bk() {
         </tr>
 
        )}
-
         </tbody>
     </Table>
 

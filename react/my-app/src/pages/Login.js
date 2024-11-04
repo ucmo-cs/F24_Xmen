@@ -8,7 +8,7 @@ function Login(){
 
     return(
         <div >
-            <h1 id = "login-div">Login Portal</h1>
+            <h1 id="login-div">Login Portal</h1>
             <h5 id="text-align-left">Username</h5>
             <Form.Control
                 id="floating-box"
