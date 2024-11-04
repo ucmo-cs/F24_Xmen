@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-
+import "./SaveLoan.css";
 
 function SaveLoan(props) {
 
@@ -63,16 +63,16 @@ function SaveLoan(props) {
     <div>
 
     <Form onSubmit = {submitLoan}>
-      <Form.Group className="mb-3" controlId="formGroupEmail">
-        <Form.Label>loan_origin_amount</Form.Label>
-        <Form.Control name="loan_origin_amount"  onChange = {changeValue}  placeholder="loan_origin_amount" />
+      <Form.Group className="mb-3" controlId="formGroupEmail" id="floating-box">
+        <Form.Label>Principle</Form.Label>
+        <Form.Control name="loan_origin_amount"  onChange = {changeValue}  placeholder="Enter Principle Here" />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="formGroupPassword">
-        <Form.Label>interest_rate</Form.Label>
-        <Form.Control name="interest_rate" onChange = {changeValue} placeholder="interest_rate" />
+      <Form.Group className="mb-3" controlId="formGroupPassword" id="floating-box">
+        <Form.Label>Interest Rate</Form.Label>
+        <Form.Control name="interest_rate" onChange = {changeValue} placeholder="Enter Interest Rate Here" />
       </Form.Group>
 
-      <Button variant="primary" type="submit">
+      <Button variant="primary" type="submit" id="saveloan-button">
         Submit  
       </Button>
 
