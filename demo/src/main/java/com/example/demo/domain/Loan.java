@@ -27,8 +27,8 @@ public class Loan {
     private Timestamp created_at;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "accountId")
     //@JsonIgnore
-    private Account user_account;
+    private User user_account;
 
 }

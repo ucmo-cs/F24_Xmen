@@ -31,9 +31,9 @@ public class Account {
 
     private Timestamp created_at;
 
-    @OneToMany(mappedBy = "user_account")
-    @JsonIgnore
-    private List<Loan>  loans = new ArrayList<>();
+    //@OneToMany(mappedBy = "user_account")
+    //@JsonIgnore
+    //private List<Loan>  loans = new ArrayList<>();
 
 
 }

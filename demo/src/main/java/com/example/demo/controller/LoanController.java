@@ -30,10 +30,10 @@ public class LoanController {
         Loan loan = new ModelMapper().map(loanDto, Loan.class);
         loan.setCreated_at(new Timestamp(System.currentTimeMillis()));
 
-        String userId = "testId";
+        int userId = 1;
         //accountId
         //userId
-        //userName
+        //String email = "test@email.com";
         return new ResponseEntity<>(loanService.create(loan, userId), HttpStatus.CREATED);
 
     }
