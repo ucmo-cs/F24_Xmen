@@ -11,11 +11,22 @@ function Loan_bk() {
 
   const [loans, setLoans] = useState([]);
 
-  useEffect(()=>{
-    fetch("http://localhost:8081/loans", {method:"GET"})
-    .then(res => res.json())
-    .then(res=> {setLoans(res);})
-  },[])
+  useEffect(() => {
+    fetch("http://localhost:8081/loans", { method: "GET", credentials: "include" })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error("Failed to fetch loans");
+          }
+          return res.json();
+        })
+        .then(data => {
+          setLoans(data);
+        })
+        .catch(error => {
+          console.error("An error occurred while fetching loans:", error);
+          setLoans([]); // Set loans to an empty array to avoid mapping over undefined
+        });
+  }, []);
 
 
   const navigate = useNavigate();

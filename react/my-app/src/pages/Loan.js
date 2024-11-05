@@ -11,7 +11,7 @@ function Loan() {
   const [loans, setLoans] = useState([]);
 
   useEffect(()=>{
-    fetch("http://localhost:8081/loans", {method:"GET"})
+    fetch("http://localhost:8081/loans", {method:"GET", credentials: "include"})
     .then(res => res.json())
     .then(res=> {setLoans(res);})
   },[])

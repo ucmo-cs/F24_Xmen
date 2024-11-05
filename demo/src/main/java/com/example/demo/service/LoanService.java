@@ -8,6 +8,7 @@ import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.LoanRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,7 @@ public class LoanService {
         System.out.println("Service : Loan amount :" + loan.getLoan_origin_amount());
         System.out.println("Service : Interest rate :" + loan.getInterest_rate());
 
-        userRepository.findByAccountId(userId).ifPresent(loan::setUser_account);
+        userRepository.findByAccountId(userId).ifPresent(loan::setUserAccount);
         return loanRepository.save(loan);
     }
 
@@ -37,6 +38,10 @@ public class LoanService {
         return loanRepository.findAll();
     }
 
-
+    @Transactional(readOnly = true)
+    public List<Loan> findByUserId(int userId){
+        List<Loan> loans = loanRepository.findAllByUserAccount_AccountId(userId);
+        return ResponseEntity.ok(loans).getBody();
+    }
 
 }

@@ -13,6 +13,7 @@ function Login() {
         try {
             const response = await fetch("http://localhost:8081/user/login", {
                 method: "POST",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })
             });

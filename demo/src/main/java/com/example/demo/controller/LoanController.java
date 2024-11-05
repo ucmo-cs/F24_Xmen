@@ -6,6 +6,7 @@ import com.example.demo.dto.AccountDto;
 import com.example.demo.dto.LoanDto;
 import com.example.demo.service.AccountService;
 import com.example.demo.service.LoanService;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class LoanController {
 
     private final LoanService loanService;
 
-    @CrossOrigin
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @PostMapping("/loan")
     public ResponseEntity<?> save(@RequestBody LoanDto loanDto) {
 
@@ -30,7 +31,7 @@ public class LoanController {
         Loan loan = new ModelMapper().map(loanDto, Loan.class);
         loan.setCreated_at(new Timestamp(System.currentTimeMillis()));
 
-        int userId = 1;
+        int userId = 2;
         //accountId
         //userId
         //String email = "test@email.com";
@@ -38,10 +39,17 @@ public class LoanController {
 
     }
 
-    @CrossOrigin
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping("/loans")
-    public ResponseEntity<?> findAll(){
-        return new ResponseEntity<>(loanService.findAll(), HttpStatus.OK);
+    public ResponseEntity<?> findAll(HttpSession session){
+        System.out.println(session.getAttribute("userId"));
+        Integer userId = (Integer) session.getAttribute("userId");
+
+        if(userId == null){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<>(loanService.findByUserId(userId), HttpStatus.OK);
     }
 
 
