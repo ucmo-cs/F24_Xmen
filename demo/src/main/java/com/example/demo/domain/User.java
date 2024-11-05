@@ -18,6 +18,10 @@ public class User {
 
     private String password;
 
+    private String bank_routing;
+
+    private String bank_account_number;
+
 
 
     public Integer getId() {
@@ -51,5 +55,21 @@ public class User {
     public String getPassword() { return password; }
 
     public void setPassword(String password) { this.password = password; }
+
+    public String getBank_routing() {
+        return bank_routing;
+    }
+
+    public void setBank_routing(String bank_routing) {
+        this.bank_routing = bank_routing;
+    }
+
+    public String getBank_account_number() {
+        return bank_account_number;
+    }
+
+    public void setBank_account_number(String bank_account_number) {
+        this.bank_account_number = bank_account_number;
+    }
 
 }
