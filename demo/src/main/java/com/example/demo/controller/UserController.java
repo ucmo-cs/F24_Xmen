@@ -26,8 +26,34 @@ public class UserController {
         n.setEmail(userDTO.getEmail());
         n.setPassword(userDTO.getPassword());
         n.setPhone_number(userDTO.getPhone_number());
+        n.setBank_routing("");
+        n.setBank_account_number("");
         userRepository.save(n);
         return "Saved";
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @PutMapping(path="/edit")
+    public @ResponseBody String editUser(@RequestBody UserDTO userDTO, HttpSession session)
+    {
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId == null) {
+            return "User not found";
+        }
+
+        User user = userRepository.findByAccountId(userId).orElse(null);
+        if (user == null) {
+            return "User not found";
+        }
+
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setPhone_number(userDTO.getPhone_number());
+        user.setBank_routing(userDTO.getBank_routing());
+        user.setBank_account_number(userDTO.getBank_account_number());
+        userRepository.save(user);
+
+        return "Edit Successful";
     }
 
     @GetMapping(path="/all")
@@ -56,5 +82,16 @@ public class UserController {
     {
         session.invalidate();
         return "Logout Successful";
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @GetMapping(path="/account")
+    public @ResponseBody User getUserById(HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId == null) {
+            return null;
+        }
+
+        return userRepository.findById(userId).orElse(null);
     }
 }
