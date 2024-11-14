@@ -28,6 +28,7 @@ public class UserController {
         n.setPhone_number(userDTO.getPhone_number());
         n.setBank_routing("");
         n.setBank_account_number("");
+        n.setAdmin(userDTO.getAdmin());
         userRepository.save(n);
         return "Saved";
     }

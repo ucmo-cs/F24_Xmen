@@ -7,6 +7,7 @@ public class UserDTO {
     private String phone_number;
     private String bank_routing;
     private String bank_account_number;
+    private boolean admin;
 
     // Getters and setters
     public String getName() {
@@ -55,5 +56,13 @@ public class UserDTO {
 
     public void setBank_account_number(String bank_account_number) {
         this.bank_account_number = bank_account_number;
+    }
+
+    public boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

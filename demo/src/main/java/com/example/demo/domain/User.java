@@ -32,6 +32,8 @@ public class User {
 
     private String bank_account_number;
 
+    private boolean admin;
+
     @OneToMany(mappedBy = "userAccount")
     @JsonIgnore
     private List<Loan> loans = new ArrayList<>();
