@@ -71,6 +71,7 @@ public class UserController {
         // Check if user exists and if password matches
         if (user != null && user.getPassword().equals(userDTO.getPassword())) {
             session.setAttribute("userId", user.getAccountId());
+            session.setAttribute("admin", user.isAdmin());
             return "Login Successful";
         } else {
             return "Invalid username or password";
@@ -94,5 +95,15 @@ public class UserController {
         }
 
         return userRepository.findById(userId).orElse(null);
+    }
+
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @GetMapping(path="/checkAdmin")
+    public @ResponseBody boolean checkAdmin(HttpSession session) {
+        if (session.getAttribute("admin") == null) {
+            return false;
+        }
+
+        return (Boolean) session.getAttribute("admin");
     }
 }
