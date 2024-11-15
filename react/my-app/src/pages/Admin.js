@@ -1,6 +1,7 @@
 import { Button, Table } from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
 import "./Admin.css";
+import {Link, useNavigate} from "react-router-dom";
 /*TODO ON THIS PAGE-----
 add function like in loan_bk.js to populate
 the table with data from the database.
@@ -15,49 +16,66 @@ o A calculated pay-off date for the loan based on interest rate and scheduled pa
 
 */
 function Admin(){
-
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [loans, setLoans] = useState([]);
+    const navigate = useNavigate()
 
     useEffect(() => {
-        // Check if the user is an admin
-        fetch("http://localhost:8081/user/checkAdmin", {
-            method: "GET",
-            credentials: "include" // Send cookies with the request
-        })
-            .then(response => response.json())
-            .then(data => setIsAdmin(data)) // Assuming the response is true or false
-            .catch(error => console.error("Error checking admin status:", error));
+        fetch("http://localhost:8081/allLoans", { method: "GET", credentials: "include" })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("Failed to fetch loans");
+                }
+                return res.json();
+            })
+            .then(data => {
+                setLoans(data);
+            })
+            .catch(error => {
+                console.error("An error occurred while fetching loans:", error);
+                setLoans([]); // Set loans to an empty array to avoid mapping over undefined
+            });
     }, []);
 
-    if (!isAdmin) {
-        return <p>You do not have access to this page.</p>;
-    }
+    // Handle row click to navigate to loan details page
+    const handleRowClick = (loanId) => {
+        navigate(`/loan/${loanId}`);
+    };
 
-    else{
-        return(
-            <div>
-                <Button variant="primary" id="create-loan-button" href="/loanform">
-                    Create A Loan
-                </Button>
-                <Table striped bordered hover id="loan-table">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>ID</th>
-                        <th>Loan ID</th>
-                        <th>Date Created</th>
-                        <th>Remaining Balance</th>
-                        <th>Principle</th>
-                        <th>Interest Rate</th>
+    return(
+        <div>
+            <Button variant="primary" id="create-loan-button" href="/loanform">
+                Create A Loan
+            </Button>
+            <Table striped bordered hover id="loan-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Loan ID</th>
+                    <th>Date Created</th>
+                    <th>Remaining Balance</th>
+                    <th>Principle</th>
+                    <th>Interest Rate</th>
+                </tr>
+                </thead>
+                <tbody>
+                {loans.map(loan =>
+
+                    <tr key={loan.loanId} onClick={() => handleRowClick(loan.loanId)} style={{ cursor: 'pointer' }}>
+                        <td>{loan.userAccount.name}</td>
+                        <td>{loan.userAccount.accountId}</td>
+                        <td>{loan.loanId}</td>
+                        <td>{new Date(loan.created_at).toLocaleDateString()}</td>
+                        <td>{loan.loan_current_amount}</td>
+                        <td>{loan.loan_origin_amount}</td>
+                        <td>{loan.interest_rate}</td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </Table>
+                )}
+                </tbody>
+            </Table>
 
-            </div>
-        );
-    }
+        </div>
+    );
 }
 
 export default Admin;

@@ -1,10 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.domain.Account;
 import com.example.demo.domain.Loan;
-import com.example.demo.dto.AccountDto;
 import com.example.demo.dto.LoanDto;
-import com.example.demo.service.AccountService;
+import com.example.demo.repository.LoanRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.LoanService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -20,6 +19,8 @@ import java.sql.Timestamp;
 public class LoanController {
 
     private final LoanService loanService;
+    private final LoanRepository loanRepository;
+    private final UserRepository userRepository;
 
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @PostMapping("/loan")
@@ -31,10 +32,22 @@ public class LoanController {
         Loan loan = new ModelMapper().map(loanDto, Loan.class);
         loan.setCreated_at(new Timestamp(System.currentTimeMillis()));
 
-        int userId = 2;
+        if(loanDto.getLoan_current_amount() == null)
+            loan.setLoan_current_amount(loan.getLoan_origin_amount());
+
+        int userId;
+
+        if(loanDto.getUser_email() != null)
+            if(userRepository.findByEmail(loanDto.getUser_email()) != null)
+                userId = userRepository.findByEmail(loanDto.getUser_email()).getAccountId();
+            else
+                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         //accountId
         //userId
         //String email = "test@email.com";
+
         return new ResponseEntity<>(loanService.create(loan, userId), HttpStatus.CREATED);
 
     }
@@ -53,6 +66,18 @@ public class LoanController {
     }
 
 
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @GetMapping(path = "/allLoans")
+    public @ResponseBody Iterable<Loan> getAllLoans() {
+        // This returns a JSON or XML with the users
+        return loanRepository.findAll();
+    }
 
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @GetMapping(path = "/loan/{loanId}")
+    public @ResponseBody Loan getLoanById(@PathVariable Integer loanId) {
+        // This returns a JSON or XML with the users
+        return loanRepository.findByLoanId(loanId).orElse(null);
+    }
 
 }

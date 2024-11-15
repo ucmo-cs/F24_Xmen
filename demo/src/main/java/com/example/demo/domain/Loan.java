@@ -1,7 +1,6 @@
 package com.example.demo.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +17,7 @@ public class Loan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long loan_id;
+    private Long loanId;
 
     private String loan_origin_amount;
     private String interest_rate;

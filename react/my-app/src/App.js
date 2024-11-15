@@ -7,52 +7,71 @@ import SaveLoan from './pages/SaveLoan';
 import Loan_bk from './pages/Loan_bk';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
+import LoanDetail from './pages/LoanDetail';
 import { useEffect, useState } from "react";
 
 function App() {
-    const [isAdmin, setIsAdmin] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const checkUserAuth = async () => {
-            try {
-                const response = await fetch('/user/account', {
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
-                });
-                console.log("Account Response:", response);
-
-                if (response.ok) {
-                    const user = await response.json();
-                    console.log("User:", user);
-                    if (user) {
-                        setIsAuthenticated(true);
-
-                        const adminResponse = await fetch('/user/checkAdmin', {
-                            credentials: 'include',
-                            headers: { 'Content-Type': 'application/json' },
-                        });
-                        console.log("Admin Response:", adminResponse);
-
-                        if (adminResponse.ok) {
-                            const isAdmin = await adminResponse.json();
-                            setIsAdmin(isAdmin);
-                        }
-                    }
-                } else {
-                    setIsAuthenticated(false);
-                    setIsAdmin(false);
+        // Fetch user authentication status
+        fetch("http://localhost:8081/user/account", {
+            method: "GET",
+            credentials: "include",
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    setIsAuthenticated(false); // User not authenticated
+                    return null;
                 }
-            } catch (error) {
-                console.error('Error checking authentication:', error);
-                setIsAuthenticated(false);
-                setIsAdmin(false);
-            }
-        };
-
-        checkUserAuth();
+                return res.json();
+            })
+            .then((data) => {
+                if (data) {
+                    setIsAuthenticated(true); // User authenticated
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching authentication data:", error);
+                setIsAuthenticated(false); // Handle fetch error
+            });
     }, []);
 
+    useEffect(() => {
+        // Fetch admin status if authenticated
+        fetch("http://localhost:8081/user/checkAdmin", {
+            method: "GET",
+            credentials: "include",
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    setIsAdmin(false);
+                    return null;
+                }
+                return res.json();
+            })
+            .then((data) => {
+                console.log("Admin Data:", data);
+                if (data !== null) {
+                    setIsAdmin(data); // true or false based on admin status
+                }
+                else{
+                    setIsAdmin(false);
+                }
+            })
+            .catch((error) => console.error("Error fetching admin data:", error));
+        setIsLoading(false);
+        console.log("User Authenticated: ", isAuthenticated);
+        console.log("User is Admin: ", isAdmin);
+    }, [isAuthenticated]);
+
+    if(isLoading){
+        return <div>Loading...</div>;
+    }
+
+    if(isAuthenticated != null && isAdmin != null)
     return (
         <div>
             <Header />
@@ -65,20 +84,16 @@ function App() {
                     </>
                 ) : isAdmin ? (
                     <>
-                        <Route path="/loan" element={<Loan_bk />} />
                         <Route path="/loanForm" element={<SaveLoan />} />
                         <Route path="/customer" element={<Customer />} />
                         <Route path="/admin" element={<Admin />} />
-                        <Route path="/login" element={<Navigate to="/admin" replace />} />
+                        <Route path="/loan/:loanId" element={<LoanDetail />} />
                         <Route path="*" element={<Navigate to="/admin" replace />} />
                     </>
                 ) : (
                     <>
                         <Route path="/loan" element={<Loan_bk />} />
-                        <Route path="/loanForm" element={<SaveLoan />} />
                         <Route path="/customer" element={<Customer />} />
-                        <Route path="/admin" element={<Navigate to="/loan" replace />} />
-                        <Route path="/login" element={<Navigate to="/loan" replace />} />
                         <Route path="*" element={<Navigate to="/loan" replace />} />
                     </>
                 )}

@@ -8,6 +8,7 @@ function SaveLoan(props) {
   const[loan, setLoan] = useState({
         loan_origin_amount:"",
         interest_rate:"",
+        user_email:""
           });  
     
 
@@ -41,6 +42,9 @@ function SaveLoan(props) {
               console.log(1,res);
               if(res.status === 201){
                 return res.json();
+              }else if(res.status === 404){
+                alert("User not found")
+                return 1;
               }else{
                 return null;
               }
@@ -48,7 +52,9 @@ function SaveLoan(props) {
           .then(res=>{
             console.log(res)
             if(res!==null){
-                navigate('/Loan');
+                if(res === 1){}
+                else
+                    navigate('/Loan');
             }else{
               alert('fails');
             }
@@ -73,7 +79,7 @@ function SaveLoan(props) {
       </Form.Group>
       <Form.Group className="mb-3" controlId="formGroupPassword" id="floating-box">
         <Form.Label>Email</Form.Label>
-        <Form.Control placeholder="Enter Email Here" />
+        <Form.Control name="user_email" onChange = {changeValue} placeholder="Enter Email Here" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formGroupPassword" id="floating-box">
         <Form.Label>Phone #</Form.Label>

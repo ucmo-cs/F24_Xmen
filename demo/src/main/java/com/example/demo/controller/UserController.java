@@ -2,10 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.domain.User;
 import com.example.demo.dto.UserDTO;
-
 import com.example.demo.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +53,7 @@ public class UserController {
         return "Edit Successful";
     }
 
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping(path = "/all")
     public @ResponseBody Iterable<User> getAllUsers() {
         // This returns a JSON or XML with the users
@@ -70,7 +69,7 @@ public class UserController {
         // Check if user exists and if password matches
         if (user != null && user.getPassword().equals(userDTO.getPassword())) {
             session.setAttribute("userId", user.getAccountId());
-            session.setAttribute("admin", userDTO.getAdmin());
+            session.setAttribute("admin", user.isAdmin());
             return "Login Successful";
         } else {
             return "Invalid username or password";
@@ -99,12 +98,6 @@ public class UserController {
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping(path = "/checkAdmin")
     public @ResponseBody boolean checkAdmin(HttpSession session) {
-        Object adminAttribute = session.getAttribute("admin");
-        if (adminAttribute instanceof Boolean) {
-            return (Boolean) adminAttribute;
-        }
-        return false; // Default to non-admin if the attribute is not properly set
+        return (Boolean) session.getAttribute("admin");
     }
-
-
 }
