@@ -59,6 +59,8 @@ function Admin(){
         }
     };
 
+    const areButtonsDisabled = currentPage === 0 && currentPage === totalPages - 1;
+
     return(
         <div>
             <Button variant="primary" id="create-loan-button" href="/loanform">
@@ -91,24 +93,26 @@ function Admin(){
                 )}
                 </tbody>
             </Table>
-            <div id="flex-parent">
-                <Button
-                    variant="primary"
-                    id="back-button"
-                    onClick={prevPage}
-                    disabled={currentPage === 0}
-                >
-                    Previous Page
-                </Button>
-                <Button
-                    variant="primary"
-                    id="next-button"
-                    onClick={nextPage}
-                    disabled={currentPage === totalPages - 1}
-                >
-                    Next Page
-                </Button>
-            </div>
+            {!areButtonsDisabled && (
+                <div id="flex-parent">
+                    <Button
+                        variant="primary"
+                        id="back-button"
+                        onClick={prevPage}
+                        disabled={currentPage === 0}
+                    >
+                        Previous Page
+                    </Button>
+                    <Button
+                        variant="primary"
+                        id="next-button"
+                        onClick={nextPage}
+                        disabled={currentPage === totalPages - 1}
+                    >
+                        Next Page
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }

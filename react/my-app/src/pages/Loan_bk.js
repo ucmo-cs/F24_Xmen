@@ -46,6 +46,8 @@ function Loan_bk() {
         }
     };
 
+    const areButtonsDisabled = currentPage === 0 && currentPage === totalPages - 1;
+
   return (
       <div>
 
@@ -72,24 +74,26 @@ function Loan_bk() {
               )}
               </tbody>
           </Table>
-          <div id="flex-parent">
-              <Button
-                  variant="primary"
-                  id="back-button"
-                  onClick={prevPage}
-                  disabled={currentPage === 0}
-              >
-                  Previous Page
-              </Button>
-              <Button
-                  variant="primary"
-                  id="next-button"
-                  onClick={nextPage}
-                  disabled={currentPage === totalPages - 1}
-              >
-                  Next Page
-              </Button>
-          </div>
+          {!areButtonsDisabled && (
+              <div id="flex-parent">
+                  <Button
+                      variant="primary"
+                      id="back-button"
+                      onClick={prevPage}
+                      disabled={currentPage === 0}
+                  >
+                      Previous Page
+                  </Button>
+                  <Button
+                      variant="primary"
+                      id="next-button"
+                      onClick={nextPage}
+                      disabled={currentPage === totalPages - 1}
+                  >
+                      Next Page
+                  </Button>
+              </div>
+          )}
       </div>
   );
 }
