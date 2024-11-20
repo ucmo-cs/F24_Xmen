@@ -8,6 +8,8 @@ import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.LoanRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,13 +36,8 @@ public class LoanService {
     }
 
     @Transactional(readOnly = true)
-    public List<Loan> findAll(){
-        return loanRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public List<Loan> findByUserId(int userId){
-        List<Loan> loans = loanRepository.findAllByUserAccount_AccountId(userId);
+    public Page<Loan> findByUserId(int userId, int page, int size) {
+        Page<Loan> loans = loanRepository.findAllByUserAccount_AccountId(userId, PageRequest.of(page, size));
         return ResponseEntity.ok(loans).getBody();
     }
 

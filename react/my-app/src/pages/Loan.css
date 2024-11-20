@@ -3,3 +3,19 @@
     width: 60%;
     margin-top: 2rem;
 }
+#back-button{
+    width: 10%;
+    margin-left: 20%;
+    margin-top: .5rem;
+    flex: 1;
+}
+#next-button{
+    width: 10%;
+    margin-right: 20%;
+    margin-top: .5rem;
+    flex: 1;
+}
+#flex-parent{
+    display: flex;
+    gap: 40%;
+}

@@ -57,7 +57,11 @@ public class LoanController {
 
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping("/loans")
-    public ResponseEntity<?> findAll(HttpSession session){
+    public ResponseEntity<?> findAll(
+            HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
         System.out.println(session.getAttribute("userId"));
         Integer userId = (Integer) session.getAttribute("userId");
 
@@ -65,7 +69,7 @@ public class LoanController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<>(loanService.findByUserId(userId), HttpStatus.OK);
+        return new ResponseEntity<>(loanService.findByUserId(userId, page, size), HttpStatus.OK);
     }
 
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
