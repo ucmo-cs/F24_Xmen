@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import "./Loan.css";
- 
-
-
 
 function Loan_bk() {
 

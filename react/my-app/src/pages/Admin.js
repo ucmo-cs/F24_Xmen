@@ -1,16 +1,8 @@
 import { Button, Table } from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
 import "./Admin.css";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 /*TODO ON THIS PAGE-----
-add function like in loan_bk.js to populate
-the table with data from the database.
-By clicking into one of the loans, the admin should be taken to a page dedicated to that loan
-where they see the following:
-o All data listed on the table above.
-o The email address of the customer who owns the loan.
-o The phone number of the customer who owns the loan.
-o Bank and account details for automatic payments.
 o The customer’s scheduled automatic payments.
 o A calculated pay-off date for the loan based on interest rate and scheduled payments.
 

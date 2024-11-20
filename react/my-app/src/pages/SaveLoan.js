@@ -81,13 +81,13 @@ function SaveLoan(props) {
         <Form.Label>Email</Form.Label>
         <Form.Control name="user_email" onChange = {changeValue} placeholder="Enter Email Here" />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="formGroupPassword" id="floating-box">
-        <Form.Label>Phone #</Form.Label>
-        <Form.Control  placeholder="Enter Phone # Here" />
-      </Form.Group>
       
 
-      <Button variant="primary" type="submit" id="saveloan-button">
+      <Button
+          variant="primary"
+          type="submit"
+          id="saveloan-button"
+          disabled={loan.loan_origin_amount === "" || loan.interest_rate === "" || loan.user_email === ""}>
         Submit  
       </Button>
 

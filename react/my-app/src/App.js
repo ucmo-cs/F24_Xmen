@@ -1,7 +1,6 @@
 import './App.css';
 import Header from './components/Header';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import Loan from './pages/Loan';
 import Customer from './pages/Customer';
 import SaveLoan from './pages/SaveLoan';
 import Loan_bk from './pages/Loan_bk';
