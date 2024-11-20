@@ -34,7 +34,6 @@ function LoanDetail() {
             <p><strong>Remaining Balance:</strong> {loan.loan_current_amount}</p>
             <p><strong>Principle:</strong> {loan.loan_origin_amount}</p>
             <p><strong>Interest Rate:</strong> {loan.interest_rate}</p>
-            {/* Add more loan details as needed */}
         </div>
     );
 }

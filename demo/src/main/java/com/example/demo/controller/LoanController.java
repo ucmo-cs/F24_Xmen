@@ -8,6 +8,9 @@ import com.example.demo.service.LoanService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,12 +68,14 @@ public class LoanController {
         return new ResponseEntity<>(loanService.findByUserId(userId), HttpStatus.OK);
     }
 
-
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
     @GetMapping(path = "/allLoans")
-    public @ResponseBody Iterable<Loan> getAllLoans() {
-        // This returns a JSON or XML with the users
-        return loanRepository.findAll();
+    public Page<Loan> getAllLoans(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return loanRepository.findAll(pageable);
     }
 
     @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")

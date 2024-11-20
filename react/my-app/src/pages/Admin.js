@@ -17,10 +17,13 @@ o A calculated pay-off date for the loan based on interest rate and scheduled pa
 */
 function Admin(){
     const [loans, setLoans] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const itemsPerPage = 10;
     const navigate = useNavigate()
 
     useEffect(() => {
-        fetch("http://localhost:8081/allLoans", { method: "GET", credentials: "include" })
+        fetch(`http://localhost:8081/allLoans?page=${currentPage}&size=${itemsPerPage}`, { method: "GET", credentials: "include" })
             .then(res => {
                 if (!res.ok) {
                     throw new Error("Failed to fetch loans");
@@ -28,17 +31,32 @@ function Admin(){
                 return res.json();
             })
             .then(data => {
-                setLoans(data);
+                setLoans(data.content);
+                setTotalPages(data.totalPages);
             })
             .catch(error => {
                 console.error("An error occurred while fetching loans:", error);
                 setLoans([]); // Set loans to an empty array to avoid mapping over undefined
             });
-    }, []);
+    }, [currentPage]);
 
     // Handle row click to navigate to loan details page
     const handleRowClick = (loanId) => {
         navigate(`/loan/${loanId}`);
+    };
+
+    // Navigate to the next page
+    const nextPage = () => {
+        if (currentPage < totalPages - 1) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    // Navigate to the previous page
+    const prevPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+        }
     };
 
     return(
@@ -73,7 +91,24 @@ function Admin(){
                 )}
                 </tbody>
             </Table>
-
+            <div id="flex-parent">
+                <Button
+                    variant="primary"
+                    id="back-button"
+                    onClick={prevPage}
+                    disabled={currentPage === 0}
+                >
+                    Previous Page
+                </Button>
+                <Button
+                    variant="primary"
+                    id="next-button"
+                    onClick={nextPage}
+                    disabled={currentPage === totalPages - 1}
+                >
+                    Next Page
+                </Button>
+            </div>
         </div>
     );
 }
