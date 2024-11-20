@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; // Import useParams to access URL parameters
+import "./Loan.css";
+import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 function LoanDetail() {
     const { loanId } = useParams(); // Get the loanId from the URL
@@ -27,14 +30,18 @@ function LoanDetail() {
     }
 
     return (
-        <div>
-            <h2>Loan Details</h2>
-            <p><strong>Loan ID:</strong> {loan.loanId}</p>
-            <p><strong>Created At:</strong> {new Date(loan.created_at).toLocaleDateString()}</p>
-            <p><strong>Remaining Balance:</strong> {loan.loan_current_amount}</p>
-            <p><strong>Principle:</strong> {loan.loan_origin_amount}</p>
-            <p><strong>Interest Rate:</strong> {loan.interest_rate}</p>
-        </div>
+        <Card>
+        <Card.Header>
+            <strong>Loan Details</strong>
+        </Card.Header>
+        <ListGroup variant='flush'>
+            <ListGroup.Item><strong>Loan ID:</strong> {loan.loanId}</ListGroup.Item>
+            <ListGroup.Item><strong>Created At:</strong> {new Date(loan.created_at).toLocaleDateString()}</ListGroup.Item>
+            <ListGroup.Item><strong>Remaining Balance:</strong> {loan.loan_current_amount}</ListGroup.Item>
+            <ListGroup.Item><strong>Principle: </strong>{loan.loan_origin_amount}</ListGroup.Item>
+            <ListGroup.Item><strong>Interest Rate:</strong> {loan.interest_rate}</ListGroup.Item>
+        </ListGroup>
+        </Card>
     );
 }
 
