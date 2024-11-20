@@ -1,0 +1,10 @@
+#card-parent
+{
+    display: flex;
+    justify-content: center;
+    gap: 10%;
+}
+#card
+{
+    width: 40%;
+}
