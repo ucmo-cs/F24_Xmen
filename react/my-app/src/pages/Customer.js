@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom'
  
 import "./Customer.css";
 import {Button, Form, Table} from 'react-bootstrap';
-import loan from "./Loan";
 
 function Customer() {
     const [isSaveDisabled, setIsSaveDisabled] = useState(true);
