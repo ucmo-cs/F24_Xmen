@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller	// This means that this class is a Controller
-@RequestMapping(path="/user")// This means URL's start with /user (after Application path)
+@Controller
+@RequestMapping(path="/user")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserController {
     private final UserRepository userRepository;

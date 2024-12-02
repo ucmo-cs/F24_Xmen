@@ -5,11 +5,10 @@ import "./Loan.css";
 
 function Loan_bk() {
 
-  const [loans, setLoans] = useState([]);
+    const [loans, setLoans] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const itemsPerPage = 10;
-    const navigate = useNavigate()
 
   useEffect(() => {
     fetch(`http://localhost:8081/loans?page=${currentPage}&size=${itemsPerPage}`, { method: "GET", credentials: "include" })
@@ -43,6 +42,29 @@ function Loan_bk() {
         }
     };
 
+    // Calculate pay off date
+    const calculatePayOff = (loan) => {
+        let amountOfMonths = 0;
+        let current_loan_amount = parseFloat(loan.loan_current_amount);
+        let interest = 0;
+
+        while (current_loan_amount > 0) {
+            interest = current_loan_amount * (parseFloat(loan.interest_rate) / 100);
+            current_loan_amount += interest - loan.loan_auto_pay;
+            amountOfMonths += 1;
+
+            // Prevent infinite loop for invalid input
+            if (amountOfMonths > 1000) {
+                console.error("Loan cannot be paid off within 1000 months.");
+                return "N/A";
+            }
+        }
+
+        const currentMonth = new Date(loan.created_at);
+        currentMonth.setMonth(new Date().getMonth() + amountOfMonths);
+        return currentMonth.toLocaleDateString();
+    }
+
     const areButtonsDisabled = currentPage === 0 && currentPage === totalPages - 1;
 
   return (
@@ -56,6 +78,8 @@ function Loan_bk() {
                   <th>Remaining Balance</th>
                   <th>Principle</th>
                   <th>Interest Rate</th>
+                  <th>Auto Pay Amount</th>
+                  <th>Pay Off Date</th>
               </tr>
               </thead>
               <tbody>
@@ -67,6 +91,18 @@ function Loan_bk() {
                       <td>{loan.loan_current_amount}</td>
                       <td>{loan.loan_origin_amount}</td>
                       <td>{loan.interest_rate}</td>
+                      { loan.loan_auto_pay === null ? (
+                          <td>0</td>
+                      ) : (
+                          <td>{loan.loan_auto_pay}</td>
+                      )
+                      }
+                      { parseFloat(loan.loan_auto_pay) === 0 || loan.loan_auto_pay === null ? (
+                            <td>N/A</td>
+                        ) : (
+                            <td>{calculatePayOff(loan)}</td>
+                        )
+                      }
                   </tr>
               )}
               </tbody>

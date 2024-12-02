@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.Loan;
+import com.example.demo.domain.User;
 import com.example.demo.dto.LoanDto;
 import com.example.demo.repository.LoanRepository;
 import com.example.demo.repository.UserRepository;
@@ -47,9 +48,6 @@ public class LoanController {
                 return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         else
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        //accountId
-        //userId
-        //String email = "test@email.com";
 
         return new ResponseEntity<>(loanService.create(loan, userId), HttpStatus.CREATED);
 
@@ -89,4 +87,17 @@ public class LoanController {
         return loanRepository.findByLoanId(loanId).orElse(null);
     }
 
+    @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+    @PutMapping(path = "/loanEdit")
+    public ResponseEntity<?> updateLoanAutoPay(
+            @RequestParam Integer loanId,
+            @RequestParam float autoPayAmount) {
+        Loan loan = loanRepository.findByLoanId(loanId).orElse(null);
+        if (loan == null) {
+            return new ResponseEntity<>("Loan not found", HttpStatus.NOT_FOUND);
+        }
+        loan.setLoan_auto_pay(String.valueOf(autoPayAmount));
+        loanRepository.save(loan);
+        return new ResponseEntity<>("Loan updated successfully", HttpStatus.OK);
+    }
 }
