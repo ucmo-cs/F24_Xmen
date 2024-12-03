@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import "./Loan.css";
 
 function Loan_bk() {
@@ -10,23 +9,24 @@ function Loan_bk() {
     const [totalPages, setTotalPages] = useState(0);
     const itemsPerPage = 10;
 
-  useEffect(() => {
-    fetch(`http://localhost:8081/loans?page=${currentPage}&size=${itemsPerPage}`, { method: "GET", credentials: "include" })
-        .then(res => {
-          if (!res.ok) {
-            throw new Error("Failed to fetch loans");
-          }
-          return res.json();
-        })
-        .then(data => {
-          setLoans(data.content);
-          setTotalPages(data.totalPages);
-        })
-        .catch(error => {
-          console.error("An error occurred while fetching loans:", error);
-          setLoans([]); // Set loans to an empty array to avoid mapping over undefined
-        });
-  }, [currentPage]);
+    // Get user loans on page load and every time the currentPage is changed
+      useEffect(() => {
+        fetch(`http://localhost:8081/loans?page=${currentPage}&size=${itemsPerPage}`, { method: "GET", credentials: "include" })
+            .then(res => {
+              if (!res.ok) {
+                throw new Error("Failed to fetch loans");
+              }
+              return res.json();
+            })
+            .then(data => {
+              setLoans(data.content);
+              setTotalPages(data.totalPages);
+            })
+            .catch(error => {
+              console.error("An error occurred while fetching loans:", error);
+              setLoans([]); // Set loans to an empty array to avoid mapping over undefined
+            });
+      }, [currentPage]);
 
     // Navigate to the next page
     const nextPage = () => {
@@ -88,13 +88,13 @@ function Loan_bk() {
                   <tr>
                       <td>{loan.loanId}</td>
                       <td>{new Date(loan.created_at).toLocaleDateString()}</td>
-                      <td>{loan.loan_current_amount}</td>
-                      <td>{loan.loan_origin_amount}</td>
-                      <td>{loan.interest_rate}</td>
+                      <td>${loan.loan_current_amount}</td>
+                      <td>${loan.loan_origin_amount}</td>
+                      <td>{loan.interest_rate}%</td>
                       { loan.loan_auto_pay === null ? (
-                          <td>0</td>
+                          <td>$0</td>
                       ) : (
-                          <td>{loan.loan_auto_pay}</td>
+                          <td>${loan.loan_auto_pay}</td>
                       )
                       }
                       { parseFloat(loan.loan_auto_pay) === 0 || loan.loan_auto_pay === null ? (

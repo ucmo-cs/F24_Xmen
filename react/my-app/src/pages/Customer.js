@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
- 
 import "./Customer.css";
-import {Button, Form, Table} from 'react-bootstrap';
+import {Button, Form} from 'react-bootstrap';
 
 function Customer() {
     const [isSaveDisabled, setIsSaveDisabled] = useState(true);
@@ -11,6 +10,7 @@ function Customer() {
         bank_routing: '', bank_account_number: ''});
     const [editStatus, setEditStatus] = useState("")
 
+    // Get account on page load
     useEffect(() => {
         fetch("http://localhost:8081/user/account", {
             method: "GET",
@@ -21,6 +21,7 @@ function Customer() {
             .catch((error) => console.error("Error fetching user data:", error));
     }, []);
 
+    // Get all loans associate with user on page load
     useEffect(() => {
         fetch(`http://localhost:8081/loans?page=${0}&size=${99999}`, { method: "GET", credentials: "include" })
             .then(res => {
@@ -37,19 +38,22 @@ function Customer() {
                 console.error("An error occurred while fetching loans:", error);
                 setLoans([]); // Set loans to an empty array to avoid mapping over undefined
             });
-    }, []);
+    });
 
+    // Handle input change on account details
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setUser({ ...user, [name]: value });
     };
 
+    // Handle input change on loan auto-pay details
     const handleLoanInputChange = (e, loanId) => {
         const { value } = e.target;
         setLoanUpdates(prev => ({ ...prev, [loanId]: value }));
         validateAutoPayAmounts(loanId, value);
     };
 
+    // Handle the submission of account info
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -79,6 +83,7 @@ function Customer() {
         }
     };
 
+    // Validate if the auto-pay values are valid and set save button state accordingly
     const validateAutoPayAmounts = (currentLoanId = null, currentValue = null) => {
         const allValid = loans.every(loan => {
             const autoPay = parseFloat(
@@ -121,30 +126,29 @@ function Customer() {
       </Form.Group>
        <Form.Group className="mb-3" id="floating-box">
         <Form.Label>Phone #</Form.Label>
-        <Form.Control  placeholder="CurrentPhoneNumberHere" type="text"
+        <Form.Control  placeholder="CurrentPhoneNumberHere" type="number"
                        name="phone_number"
                        value={user.phone_number}
                        onChange={handleInputChange}/>
       </Form.Group>
       <Form.Group className="mb-3" id="floating-box">
         <Form.Label>Routing #</Form.Label>
-        <Form.Control  placeholder="CurrentRoutingNumberHere" type="text"
+        <Form.Control  placeholder="CurrentRoutingNumberHere" type="number"
                        name="bank_routing"
                        value={user.bank_routing}
                        onChange={handleInputChange}/>
       </Form.Group>
       <Form.Group className="mb-3" id="floating-box">
         <Form.Label>Account #</Form.Label>
-        <Form.Control  placeholder="CurrentAccountNumberHere" type="text"
+        <Form.Control  placeholder="CurrentAccountNumberHere" type="number"
                        name="bank_account_number"
                        value={user.bank_account_number}
                        onChange={handleInputChange}/>
       </Form.Group>
-       <a>
            {loans.map(loan =>
                 <Form.Group className="mb-3" id="floating-box">
                     <Form.Label>Loan #{loan.loanId} AutoPay Amount</Form.Label>
-                    <Form.Control  placeholder="Loan Auto Pay Amount" type="text"
+                    <Form.Control  placeholder="Loan Auto Pay Amount" type="number"
                                    value={loanUpdates[loan.loanId] ?? loan.loan_auto_pay}
                                    onChange={(e) => {
                                        handleLoanInputChange(e, loan.loanId);}
@@ -153,7 +157,6 @@ function Customer() {
                         ${parseFloat(loan.loan_current_amount) + Math.ceil(parseFloat(loan.loan_current_amount) * (parseFloat(loan.interest_rate) / 100.0))} or $0 for no auto pay</Form.Label>
                 </Form.Group>
            )}
-       </a>
 
       <Button variant="primary" type="submit" id="save-edits-button" disabled={isSaveDisabled}>
         Change My Information

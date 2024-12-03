@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 
-import com.example.demo.domain.Account;
 import com.example.demo.domain.Loan;
-import com.example.demo.domain.User;
-import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.LoanRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -22,19 +19,16 @@ import java.util.List;
 public class LoanService {
 
     private final LoanRepository loanRepository;
-    private final AccountRepository accountRepository;
     private final UserRepository userRepository;
 
+    // Function that creates a loan
     @Transactional
     public Loan create(Loan loan, int userId){
-
-        System.out.println("Service : Loan amount :" + loan.getLoan_origin_amount());
-        System.out.println("Service : Interest rate :" + loan.getInterest_rate());
-
         userRepository.findByAccountId(userId).ifPresent(loan::setUserAccount);
         return loanRepository.save(loan);
     }
 
+    // Function that finds a loan by the userId
     @Transactional(readOnly = true)
     public Page<Loan> findByUserId(int userId, int page, int size) {
         Page<Loan> loans = loanRepository.findAllByUserAccount_AccountId(userId, PageRequest.of(page, size));

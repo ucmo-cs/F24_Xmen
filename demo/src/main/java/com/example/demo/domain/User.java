@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity // This tells Hibernate to make a table out of this class
+@Entity
 @Table(name = "users")
 public class User {
     @Id

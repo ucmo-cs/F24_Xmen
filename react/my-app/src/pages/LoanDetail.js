@@ -24,10 +24,37 @@ function LoanDetail() {
             .catch(error => {
                 console.error("Error fetching loan details:", error);
             });
-    }, [loanId]); // Dependency on loanId, so it updates when the URL changes
+    }, [loanId]);
 
+    // Prevent loan details for loading before everything is loaded
     if (!loan) {
         return <div>Loading...</div>;
+    }
+
+    // Calculate pay off date
+    const calculatePayOff = (loan) => {
+        let amountOfMonths = 0;
+        let current_loan_amount = parseFloat(loan.loan_current_amount);
+        let interest = 0;
+
+        // Loop until the current_loan_amount is 0 or less
+        // Each loop is monthly interest being added and auto-pay amount taken out
+        while (current_loan_amount > 0) {
+            interest = current_loan_amount * (parseFloat(loan.interest_rate) / 100);
+            current_loan_amount += interest - loan.loan_auto_pay;
+            amountOfMonths += 1;
+
+            // Prevent infinite loop for invalid input
+            if (amountOfMonths > 1000) {
+                console.error("Loan cannot be paid off within 1000 months.");
+                return "N/A";
+            }
+        }
+
+        // Create currentMonth and add amount of months calculated in while loop a return
+        const currentMonth = new Date(loan.created_at);
+        currentMonth.setMonth(new Date().getMonth() + amountOfMonths);
+        return currentMonth.toLocaleDateString();
     }
 
     return (
@@ -39,9 +66,11 @@ function LoanDetail() {
                 <ListGroup variant='flush'>
                     <ListGroup.Item><strong>Loan ID:</strong> {loan.loanId}</ListGroup.Item>
                     <ListGroup.Item><strong>Created At:</strong> {new Date(loan.created_at).toLocaleDateString()}</ListGroup.Item>
-                    <ListGroup.Item><strong>Remaining Balance:</strong> {loan.loan_current_amount}</ListGroup.Item>
-                    <ListGroup.Item><strong>Principle: </strong>{loan.loan_origin_amount}</ListGroup.Item>
-                    <ListGroup.Item><strong>Interest Rate:</strong> {loan.interest_rate}</ListGroup.Item>
+                    <ListGroup.Item><strong>Remaining Balance:</strong> ${loan.loan_current_amount}</ListGroup.Item>
+                    <ListGroup.Item><strong>Principle: </strong> ${loan.loan_origin_amount}</ListGroup.Item>
+                    <ListGroup.Item><strong>Interest Rate:</strong> {loan.interest_rate}%</ListGroup.Item>
+                    <ListGroup.Item><strong>Auto Pay Amount:</strong>{ loan.loan_auto_pay === null ? (<td>$0</td>) : (<td>${loan.loan_auto_pay}</td>) }</ListGroup.Item>
+                    <ListGroup.Item><strong>Pay Off Date:</strong>{ parseFloat(loan.loan_auto_pay) === 0 || loan.loan_auto_pay === null ? (<td>N/A</td>) : (<td>{calculatePayOff(loan)}</td>) }</ListGroup.Item>
                 </ListGroup>
             </Card>
             <Card id="card">

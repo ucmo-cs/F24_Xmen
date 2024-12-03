@@ -71,15 +71,15 @@ function SaveLoan(props) {
     <Form onSubmit = {submitLoan}>
       <Form.Group className="mb-3" controlId="formGroupEmail" id="floating-box">
         <Form.Label>Principle</Form.Label>
-        <Form.Control name="loan_origin_amount"  onChange = {changeValue}  placeholder="Enter Principle Here" />
+        <Form.Control name="loan_origin_amount" type="number" onChange = {changeValue}  placeholder="Enter Principle Here" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formGroupPassword" id="floating-box">
         <Form.Label>Interest Rate</Form.Label>
-        <Form.Control name="interest_rate" onChange = {changeValue} placeholder="Enter Interest Rate Here" />
+        <Form.Control name="interest_rate" type="number" step="0.000001" onChange = {changeValue} placeholder="Enter Interest Rate Here" />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formGroupPassword" id="floating-box">
         <Form.Label>Email</Form.Label>
-        <Form.Control name="user_email" onChange = {changeValue} placeholder="Enter Email Here" />
+        <Form.Control name="user_email" type="email" onChange = {changeValue} placeholder="Enter Email Here" />
       </Form.Group>
       
 

@@ -2,11 +2,7 @@ import { Button, Table } from 'react-bootstrap';
 import React, {useEffect, useState} from 'react';
 import "./Admin.css";
 import {useNavigate} from "react-router-dom";
-/*TODO ON THIS PAGE-----
-o The customer’s scheduled automatic payments.
-o A calculated pay-off date for the loan based on interest rate and scheduled payments.
 
-*/
 function Admin(){
     const [loans, setLoans] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -14,6 +10,7 @@ function Admin(){
     const itemsPerPage = 10;
     const navigate = useNavigate()
 
+    // Get loans from backend on page load and every time currentPage changes
     useEffect(() => {
         fetch(`http://localhost:8081/allLoans?page=${currentPage}&size=${itemsPerPage}`, { method: "GET", credentials: "include" })
             .then(res => {
@@ -28,7 +25,7 @@ function Admin(){
             })
             .catch(error => {
                 console.error("An error occurred while fetching loans:", error);
-                setLoans([]); // Set loans to an empty array to avoid mapping over undefined
+                setLoans([]);
             });
     }, [currentPage]);
 
@@ -51,6 +48,32 @@ function Admin(){
         }
     };
 
+    // Calculate pay off date
+    const calculatePayOff = (loan) => {
+        let amountOfMonths = 0;
+        let current_loan_amount = parseFloat(loan.loan_current_amount);
+        let interest = 0;
+
+        // Loop until the current_loan_amount is 0 or less
+        // Each loop is monthly interest being added and auto-pay amount taken out
+        while (current_loan_amount > 0) {
+            interest = current_loan_amount * (parseFloat(loan.interest_rate) / 100);
+            current_loan_amount += interest - loan.loan_auto_pay;
+            amountOfMonths += 1;
+
+            // Prevent infinite loop for invalid input
+            if (amountOfMonths > 1000) {
+                console.error("Loan cannot be paid off within 1000 months.");
+                return "N/A";
+            }
+        }
+
+        // Create currentMonth and add amount of months calculated in while loop a return
+        const currentMonth = new Date(loan.created_at);
+        currentMonth.setMonth(new Date().getMonth() + amountOfMonths);
+        return currentMonth.toLocaleDateString();
+    }
+
     const areButtonsDisabled = currentPage === 0 && currentPage === totalPages - 1;
 
     return(
@@ -68,19 +91,32 @@ function Admin(){
                     <th>Remaining Balance</th>
                     <th>Principle</th>
                     <th>Interest Rate</th>
+                    <th>Auto Pay Amount</th>
+                    <th>Pay Off Date</th>
                 </tr>
                 </thead>
                 <tbody>
                 {loans.map(loan =>
-
                     <tr key={loan.loanId} onClick={() => handleRowClick(loan.loanId)} style={{ cursor: 'pointer' }}>
                         <td>{loan.userAccount.name}</td>
                         <td>{loan.userAccount.accountId}</td>
                         <td>{loan.loanId}</td>
                         <td>{new Date(loan.created_at).toLocaleDateString()}</td>
-                        <td>{loan.loan_current_amount}</td>
-                        <td>{loan.loan_origin_amount}</td>
-                        <td>{loan.interest_rate}</td>
+                        <td>${loan.loan_current_amount}</td>
+                        <td>${loan.loan_origin_amount}</td>
+                        <td>{loan.interest_rate}%</td>
+                        { loan.loan_auto_pay === null ? (
+                            <td>$0</td>
+                        ) : (
+                            <td>${loan.loan_auto_pay}</td>
+                        )
+                        }
+                        { parseFloat(loan.loan_auto_pay) === 0 || loan.loan_auto_pay === null ? (
+                            <td>N/A</td>
+                        ) : (
+                            <td>{calculatePayOff(loan)}</td>
+                        )
+                        }
                     </tr>
                 )}
                 </tbody>

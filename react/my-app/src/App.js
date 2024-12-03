@@ -3,7 +3,7 @@ import Header from './components/Header';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Customer from './pages/Customer';
 import SaveLoan from './pages/SaveLoan';
-import Loan_bk from './pages/Loan_bk';
+import Loan from './pages/Loan_bk';
 import Login from './pages/Login';
 import Admin from './pages/Admin';
 import LoanDetail from './pages/LoanDetail';
@@ -64,8 +64,9 @@ function App() {
         setIsLoading(false);
         console.log("User Authenticated: ", isAuthenticated);
         console.log("User is Admin: ", isAdmin);
-    }, [isAuthenticated]);
+    }, [isAuthenticated, isAdmin]);
 
+    // Prevent page from loading before the authentication is validated
     if(isLoading){
         return <div>Loading...</div>;
     }
@@ -91,7 +92,7 @@ function App() {
                     </>
                 ) : (
                     <>
-                        <Route path="/loan" element={<Loan_bk />} />
+                        <Route path="/loan" element={<Loan />} />
                         <Route path="/customer" element={<Customer />} />
                         <Route path="*" element={<Navigate to="/loan" replace />} />
                     </>

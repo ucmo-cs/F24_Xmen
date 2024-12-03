@@ -7,6 +7,7 @@ function Login() {
     const [password, setPassword] = useState("");
     const [loginStatus, setLoginStatus] = useState("");
 
+    // Handle the login logic when the login button is pressed
     const handleLogin = async (e) => {
         e.preventDefault();
 
