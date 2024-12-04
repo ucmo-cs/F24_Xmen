@@ -4,6 +4,8 @@ import com.example.demo.domain.User;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,7 @@ public class UserController {
 
     // Post Function that adds a new user using passed in UserDTO variable
     @PostMapping(path = "/add")
-    public @ResponseBody String addNewUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> addNewUser(@RequestBody UserDTO userDTO) {
         // Create a new user variable
         User n = new User();
 
@@ -34,8 +36,7 @@ public class UserController {
         n.setBank_account_number("");
 
         // Save user and return message
-        userRepository.save(n);
-        return "Saved";
+        return new ResponseEntity<>(userRepository.save(n), HttpStatus.CREATED);
     }
 
     // PUT Function that edits a user
